@@ -1,1 +1,96 @@
+/*
+  Autor: Jakub Pawiński
+ 
+  30 stycznia 2020
+ */
+
+
+#include "stdio.h"
+
+typedef int bool;
+#define true 1;
+#define false 0;
+
+//przemiata tablice i jezeli jest ustawiona wartosc to wyswietla w odp. polu
+void screen(char t[])   
+{
+    for (int i = 1; i <= 9; i++)
+    {
+        printf(" ");
+        printf("%c", t[i]);
+        printf(" ");
+        if (i % 3)
+            printf("|");
+
+        else if (i != 9)
+            printf("\n---|---|---\n");
+        else
+            printf("\n");
+    }
+}
+//jak wygrac
+bool win(char t[], char g)
+{
+    bool test = false;
+    int i;
+
+    test = false;
+    for (i = 1; i <= 7; i += 3)
+        test |= ((t[i] == g) && (t[i + 1] == g) && (t[i + 2] == g));
+    for (i = 1; i <= 3; i++)
+        test |= ((t[i] == g) && (t[i + 3] == g) && (t[i + 6] == g));
+    test |= ((t[1] == g) && (t[5] == g) && (t[9] == g));
+    test |= ((t[3] == g) && (t[5] == g) && (t[7] == g));
+    if (test)
+
+    {
+        screen(t);
+        printf("\nWygrywa %c\n", g);
+            return true;
+    }
+    return false;
+}
+
+//w przypadku remisu
+bool remis(char t[])
+{
+    for (int i = 1; i <= 9; i++)
+        if (t[i] == ' ') return false;
+    screen(t);
+    printf("Rozgrywka remisowa :) \n");
+    return true;
+}
+
+//pobieranie przycisku z klawiatury, zapisuje do tablicy i zmienia gracza
+char put_point(char t[], char player)
+{
+    int n;
+
+    screen(t);
+    printf("\nTeraz gracz %c :", player);
+    scanf("%d", &n);
+    if ((n >= 1) && (n <= 9) && (t[n] == ' '))
+        t[n] = player;
+    player = (player == 'O') ? 'X' : 'O';
+    return player;
+}
+
+int main(int argc, char** argv) 
+{
+    char table[10], g;
+    char c[1];
+    while(1){
+        printf("Kółko i krzyzyk , wygra lepszy :)\n");
+        for(int i = 1; i <= 9; i++)
+            table[i] = ' ';
+        g = 'O';
+        while (!win(table, 'X') && !win(table, 'O') && !remis(table)) 
+            g=put_point(table, g);
+        printf("Kontynuacja  ? (t = TAK) : \n");
+        scanf("%s", c);
+        if(c[0]!='t')
+            break;
+    }
+}
+
 
